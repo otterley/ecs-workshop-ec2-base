@@ -2,7 +2,7 @@
 
 set -ex
 
-STACK_NAME=ec2-base-$C9_USER
+source common.sh
 
 target_group_arn=$(aws cloudformation describe-stacks --stack-name $STACK_NAME --query 'Stacks[0].Outputs[?OutputKey==`FrontEndTargetGroup`].OutputValue' --output text)
 vpc=$(aws cloudformation describe-stacks --stack-name $STACK_NAME --query 'Stacks[0].Outputs[?OutputKey==`VpcId`].OutputValue' --output text)
@@ -17,5 +17,5 @@ ecs-cli compose --project-name ecsdemo-frontend service up \
     --enable-service-discovery \
     --container-name ecsdemo-frontend \
     --container-port 3000 \
-    --cluster-config ecs-workshop \
+    --cluster-config $CONFIG_NAME \
     --vpc $vpc
