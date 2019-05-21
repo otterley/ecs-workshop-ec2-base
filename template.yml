@@ -235,13 +235,19 @@ Resources:
   ECSCluster:
     Type: AWS::ECS::Cluster
 
-  # A security group for the EC2 instances.
-  # Rules are added to this security group based on what ingress you
-  # add for the cluster.
   InstanceSecurityGroup:
     Type: AWS::EC2::SecurityGroup
     Properties:
       GroupDescription: Access to the EC2 instances
+      VpcId: !Ref "VPC"
+
+  # A security group for the EC2 container network interfaces.
+  # Rules are added to this security group based on what ingress you
+  # add for the cluster.
+  ContainerSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: Access to the container network interfaces
       VpcId: !Ref "VPC"
 
   # A role used to allow AWS Autoscaling to inspect stats and adjust scalable targets
@@ -401,7 +407,7 @@ Resources:
     Type: AWS::EC2::SecurityGroupIngress
     Properties:
       Description: Ingress from the public ALB
-      GroupId: !Ref InstanceSecurityGroup
+      GroupId: !Ref ContainerSecurityGroup
       IpProtocol: tcp
       FromPort: 0
       ToPort: 65535
@@ -506,9 +512,9 @@ Outputs:
     Value: !Ref "PrivateSubnetThree"
     Export:
       Name: !Sub ${EnvironmentName}:PrivateSubnetThree
-  InstanceSecurityGroup:
-    Description: A security group used to allow EC2 instances to receive traffic
-    Value: !Ref "InstanceSecurityGroup"
+  ContainerSecurityGroup:
+    Description: A security group used to allow the containers to receive traffic
+    Value: !Ref "ContainerSecurityGroup"
     Export:
       Name: !Sub ${EnvironmentName}:InstanceSecurityGroup
   PublicListener:
