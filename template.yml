@@ -6,7 +6,8 @@ Parameters:
     Description: A friendly environment name that will be used for namespacing all cluster resources
   EC2InstanceType:
     Type: String
-    Default: t3a.medium
+    # We need these to be xlarge so we don't run out of ENIs
+    Default: t3a.xlarge
     Description: EC2 instance type
   ImageId:
     Type: AWS::SSM::Parameter::Value<AWS::EC2::Image::Id>
