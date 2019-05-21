@@ -17,5 +17,5 @@ ecs-cli compose --project-name ecsdemo-frontend service up \
     --enable-service-discovery \
     --container-name ecsdemo-frontend \
     --container-port 3000 \
-    --cluster-config fargate-demo \
+    --cluster-config ecs-workshop \
     --vpc $vpc
