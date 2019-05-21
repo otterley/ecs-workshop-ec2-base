@@ -365,6 +365,10 @@ Resources:
       MinSize: "1"
       HealthCheckType: EC2
       LaunchConfigurationName: !Ref ECSInstanceLaunchConfig
+      Tags:
+      - Key: Name
+        Value: !Sub "ecs-instance-${EnvironmentName}"
+        PropagateAtLaunch: true
       VPCZoneIdentifier:
         - !Ref PrivateSubnetOne
         - !Ref PrivateSubnetTwo
@@ -378,6 +382,7 @@ Resources:
         MinInstancesInService: 2
         MinSuccessfulInstancesPercent: 100
         PauseTime: PT10M
+
 
   # Public load balancer, hosted in public subnets that is accessible
   # to the public, and is intended to route traffic to one or more public
