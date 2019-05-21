@@ -249,6 +249,24 @@ Resources:
     Properties:
       GroupDescription: Access to the container network interfaces
       VpcId: !Ref "VPC"
+  ContainerSecurityGroupIngressFromPublicALB:
+    Type: AWS::EC2::SecurityGroupIngress
+    Properties:
+      Description: Ingress from the public ALB
+      GroupId: !Ref ContainerSecurityGroup
+      IpProtocol: tcp
+      FromPort: 0
+      ToPort: 65535
+      SourceSecurityGroupId: !Ref PublicLoadBalancerSG
+  ContainerSecurityGroupIngressFromItself:
+    Type: AWS::EC2::SecurityGroupIngress
+    Properties:
+      Description: Ingress for container security group from itself
+      GroupId: !Ref ContainerSecurityGroup
+      IpProtocol: tcp
+      FromPort: 0
+      ToPort: 65535
+      SourceSecurityGroupId: !Ref ContainerSecurityGroup
 
   # A role used to allow AWS Autoscaling to inspect stats and adjust scalable targets
   # on your AWS account
@@ -403,15 +421,6 @@ Resources:
           IpProtocol: tcp
           FromPort: 80
           ToPort: 80
-  SecurityGroupIngressFromPublicALB:
-    Type: AWS::EC2::SecurityGroupIngress
-    Properties:
-      Description: Ingress from the public ALB
-      GroupId: !Ref ContainerSecurityGroup
-      IpProtocol: tcp
-      FromPort: 0
-      ToPort: 65535
-      SourceSecurityGroupId: !Ref PublicLoadBalancerSG
   PublicLoadBalancer:
     Type: AWS::ElasticLoadBalancingV2::LoadBalancer
     Properties:
