@@ -472,11 +472,6 @@ Outputs:
     Value: !GetAtt "AutoscalingRole.Arn"
     Export:
       Name: !Sub ${EnvironmentName}:AutoscalingRole
-  ECSRole:
-    Description: The ARN of the ECS role
-    Value: !GetAtt "ECSRole.Arn"
-    Export:
-      Name: !Sub ${EnvironmentName}:ECSRole
   VpcId:
     Description: The ID of the VPC that this stack is deployed in
     Value: !Ref "VPC"
