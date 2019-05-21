@@ -399,6 +399,8 @@ Resources:
       Description: Ingress from the public ALB
       GroupId: !Ref InstanceSecurityGroup
       IpProtocol: tcp
+      FromPort: 0
+      ToPort: 65535
       SourceSecurityGroupId: !Ref PublicLoadBalancerSG
   PublicLoadBalancer:
     Type: AWS::ElasticLoadBalancingV2::LoadBalancer
