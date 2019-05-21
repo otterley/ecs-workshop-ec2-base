@@ -366,9 +366,9 @@ Resources:
       HealthCheckType: EC2
       LaunchConfigurationName: !Ref ECSInstanceLaunchConfig
       Tags:
-      - Key: Name
-        Value: !Sub "ecs-instance-${EnvironmentName}"
-        PropagateAtLaunch: true
+        - Key: Name
+          Value: !Sub "ecs-instance-${EnvironmentName}"
+          PropagateAtLaunch: true
       VPCZoneIdentifier:
         - !Ref PrivateSubnetOne
         - !Ref PrivateSubnetTwo
@@ -382,7 +382,6 @@ Resources:
         MinInstancesInService: 2
         MinSuccessfulInstancesPercent: 100
         PauseTime: PT10M
-
 
   # Public load balancer, hosted in public subnets that is accessible
   # to the public, and is intended to route traffic to one or more public
@@ -423,7 +422,7 @@ Resources:
       SecurityGroups: [!Ref PublicLoadBalancerSG]
   # A dummy target group is used to setup the ALB to just drop traffic
   # initially, before any real service target groups have been added.
-  DummyTargetGroupPublic:
+  FrontEndTargetGroup:
     Type: AWS::ElasticLoadBalancingV2::TargetGroup
     Properties:
       TargetType: ip
@@ -447,7 +446,7 @@ Resources:
     Type: AWS::ElasticLoadBalancingV2::Listener
     Properties:
       DefaultActions:
-        - TargetGroupArn: !Ref DummyTargetGroupPublic
+        - TargetGroupArn: !Ref FrontEndTargetGroup
           Type: forward
       LoadBalancerArn: !Ref PublicLoadBalancer
       Port: 80
@@ -522,3 +521,8 @@ Outputs:
     Value: !Sub http://${PublicLoadBalancer.DNSName}
     Export:
       Name: !Sub ${EnvironmentName}:ExternalUrl
+  FrontEndTargetGroup:
+    Description: Load balancer target group ARN
+    Value: !Ref FrontEndTargetGroup
+    Export:
+      Name: !Sub ${EnvironmentName}:FrontEndTargetGroup
